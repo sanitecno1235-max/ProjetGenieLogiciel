@@ -1,46 +1,46 @@
-public class Main {
-    public static void main(String[] args) {
-        // Création du magasin
-        Magasin magasin = new Magasin(1, "Magasin Wakwa", "Wakwa, Ngaoundéré");
 
-        // Ajout d'outils
-        Outil houe = new Outil(1, "Houe");
-        Outil machette = new Outil(2, "Machette");
-        Outil arrosoir = new Outil(3, "Arrosoir");
-        magasin.ajouterOutil(houe);
-        magasin.ajouterOutil(machette);
-        magasin.ajouterOutil(arrosoir);
+public class Outil {
+    private int id;
+    private String nom;
+    private String description;
+    private EtatOutil etat;
+    private boolean disponible;
+    private Magasin magasin;
 
-        // Création des acteurs
-        Cultivateur c1 = new Cultivateur(1, "Mbarga", "Paul", "677001122");
-        Cultivateur c2 = new Cultivateur(2, "Njoya", "Aïssatou", "699334455");
-        Administrateur admin = new Administrateur(10, "Hamidou", "Ali",
-                                                  "655000001", "principal");
+    public Outil(int id, String nom, String description) {
+        this.id = id;
+        this.nom = nom;
+        this.description = description;
+        this.etat = EtatOutil.DISPONIBLE;
+        this.disponible = true;
+    }
 
-        // Emprunt
-        Emprunt e1 = c1.emprunter(houe);
-        System.out.println(e1);
+    public int getId() { return id; }
+    public String getNom() { return nom; }
+    public String getDescription() { return description; }
+    public EtatOutil getEtat() { return etat; }
+    public boolean isDisponible() { return disponible; }
+    public Magasin getMagasin() { return magasin; }
 
-        // Réservation
-        Reservation r1 = c2.reserver(machette);
-        r1.confirmer(java.time.LocalDate.now().plusDays(3));
+    public void setEtat(EtatOutil etat) { this.etat = etat; }
+    public void setDisponible(boolean disponible) { this.disponible = disponible; }
+    public void setMagasin(Magasin magasin) { this.magasin = magasin; }
 
-        // Inventaire
-        c1.faireinventaire(magasin);
+    public void reparer() {
+        this.etat = EtatOutil.DISPONIBLE;
+        this.disponible = true;
+        System.out.println("Outil réparé : " + nom);
+    }
 
-        // Déclaration perte
-        arrosoir.declarerPerdu();
+    public void declarerPerdu() {
+        this.etat = EtatOutil.PERDU;
+        this.disponible = false;
+        System.out.println("Outil déclaré perdu : " + nom);
+    }
 
-        // Retour outil
-        e1.retourner();
-
-        // Suppression par admin
-        admin.supprimerOutil(machette, magasin);
-
-        // Un cultivateur quitte
-        c2.quitterCooperative();
-
-        // Inventaire final
-        magasin.inventaire();
+    @Override
+    public String toString() {
+        return "[" + id + "] " + nom + " - État: " + etat
+            + " - Disponible: " + disponible;
     }
 }
